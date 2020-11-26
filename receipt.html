@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kvittering</title>
+        <link type="text/css" rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Bestillt!</h1>
+        <div id="receipt">
+            
+        </div>
+        
+        <script>
+            const receipt = document.getElementById("receipt");
+            receipt.innerHTML = JSON.parse(sessionStorage.getItem("receipt"));
+            
+            
+        </script>
+    </body>
+</html>

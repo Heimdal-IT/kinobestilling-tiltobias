@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kino</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Tronheim Kino</h1>
+    </header>
+    <main>
+        <div id="gridContainer">
+            <!--<form action="javascript:void(0)">-->
+                <div id="films">
+                    <h2>Filmer</h2>
+                    <label for="billie">
+                        <input type="radio" name="film" id="billie" value="Billie Eilish: The Movie" data-price="200">
+                        Billie Eilish: The Movie
+                    </label>
+                    <label for="christian">
+                        <input type="radio" name="film" id="christian" value="Min Biografi - Christian Bjørnaas" data-price="90">
+                        Min Biografi - Christian Bjørnaas
+                    </label>
+                    <label for="blond">
+                        <input type="radio" name="film" id="blond" value="James Blond: No time to dye" data-price="130">
+                        James Blond: No time to dye
+                    </label>
+                    <label for="hotfuzz">
+                        <input type="radio" name="film" id="hotfuzz" value="Sannheten om Rødhette" data-price="100">
+                        Sannheten om Rødhette
+                    </label>
+                </div>
+                
+                <div id="seatsContainer">
+                    <h2>Velg seter</h2>
+                    <div id="cinema">
+                        <div id="screen">Skjerm</div>
+                        <div id="seats"></div>
+                    </div>
+                </div>
+                
+                
+                <div id="accessories">
+                    <h2>Tilbehør</h2>
+                    <label for="eplejuice">
+                        <input type="checkbox" name="accessories" id="eplejuice" value="Eplejuice" data-price="24.99">
+                        Eplejuice
+                    </label>
+                    <label for="litago">
+                        <input type="checkbox" name="accessories" id="litago" value="Litago" data-price="19.99">
+                        Litago
+                    </label>
+                    <label for="olpolse">
+                        <input type="checkbox" name="accessories" id="olpolse" value="Ølpølse" data-price="29.45">
+                        Ølpølse
+                    </label>
+                    <label for="banan">
+                        <input type="checkbox" name="accessories" id="banan" value="Banan" data-price="9.99">
+                        Banan
+                    </label>
+                    <label for="taser">
+                        <input type="checkbox" name="accessories" id="taser" value="Taser" data-price="249.90">
+                        Taser
+                    </label>
+                    <label for="sovnighetsklut">
+                        <input type="checkbox" name="accessories" id="sovnighetsklut" value="Søvnighetsklut" data-price="99.90">
+                        Søvnighetsklut
+                    </label>
+                    <label for="godt">
+                        <input type="checkbox" name="accessories" id="godt" value="Godt" data-price="1">
+                        Godt
+                    </label>
+                </div>
+
+
+            <!--</form>-->
+            <!--<div id="gridLeft">-->
+                <div id="orderContainer">
+
+                </div>
+                <div id="btnContainer">
+                    <input type="button" id="btnOrder" value="Bestill" disabled>
+                </div>
+            <!--</div>-->
+
+        </div>
+    </main>
+    
+    
+    
+    
+    
+<script>
+    const inpsRadio = document.querySelectorAll("input[type=\"radio\"]");
+    const inpsOrder = document.querySelectorAll("input[type=\"radio\"],input[type=\"checkbox\"]");
+    const btnOrder = document.getElementById("btnOrder");
+    const rcptCont = document.getElementById("orderContainer");
+    const seatCont = document.getElementById("seats");
+    const seatsCont = document.getElementById("seatsContainer");
+    
+    
+    const getChoiceInputs = function(group) {
+        let choices = document.querySelectorAll("input[type=\"radio\"][name=" + group + "],input[type=\"checkbox\"][name=" + group + "]");
+        let selectedChoices = [];
+        for (const i of choices) {
+            if (i.checked) {
+                selectedChoices.push({
+                    item : i.value ,
+                    price : i.getAttribute("data-price")
+                });
+            };
+        };
+        return selectedChoices;
+    };
+    
+    
+    const printOrder = function() {
+        let allItems = getChoiceInputs("film").concat(getChoiceInputs("accessories"));
+        rcptCont.innerHTML = "";
+        let totalPrice = 0;
+        for (i of allItems) {
+            rcptCont.innerHTML += i.item + " " + i.price + "kr <br>";
+            totalPrice += +i.price*100;
+        };
+        rcptCont.innerHTML += "Total: " + totalPrice/100 + "kr";
+    };
+    
+    
+    let selectedFilm;
+    const selectRadio = function() {
+        for (i of inpsRadio) {
+            i.checked = false;
+        };
+        if (this.value === selectedFilm) {
+            this.checked = false;
+            selectedFilm = 0;
+        } else {
+            this.checked = true;
+            selectedFilm = this;
+        };
+    };
+    
+    
+    const printReceipt = function() {
+        sessionStorage.setItem("receipt", JSON.stringify(rcptCont.innerHTML));
+        window.open("receipt.html","","top=100,left=100,width=300,height=500");
+    };
+    
+    
+    
+    const makeSeats = function() {
+        seatCont.innerHTML = "";
+        for (i = 0; i < 200; i++){
+            let seat = document.createElement("div");
+            seat.setAttribute("id", "seat" + i);
+            seat.classList.add("seat");
+            seatCont.appendChild(seat);
+            if (Math.random() < 0.2) {
+                seat.classList.add("seatTaken");
+            };
+        };
+    };
+    makeSeats();
+    const allSeats = document.querySelectorAll(".seat");
+    
+    
+    let selectedSeat;
+    const selectSeat = function() {
+        for (i of allSeats) {
+            i.classList.remove("seatSelected");
+        };
+        if (this.classList.contains("seatTaken")) {
+            
+        } else {
+            selectedSeat = this;
+            //getSeatPosition(this);
+        };
+        selectedSeat.classList.add("seatSelected");
+    };
+    
+    
+    const getSeatPosition = function(x) {
+        let index;
+        for (i = 0; i < allSeats.length; i++) {
+            if (allSeats[i] == x) {
+                index = i;
+            };
+        };
+        const colCount = window.getComputedStyle(seatCont).gridTemplateColumns.split(" ").length;
+        const rowPosition = Math.floor(index / colCount) + 1;
+        const colPosition = colCount - (index % colCount);
+        
+        //console.log({ row: rowPosition , col: colPosition});
+        return { row: rowPosition , col: colPosition};
+    };
+    
+    /*
+    let seatList = [];
+    const saveSeats = function() {
+        //let seatList = [];
+        for (i = 0; i < allSeats.length; i++) {
+            seatList.push(allSeats[i].classList);
+        };
+        return seatList;
+    };
+    
+    
+    const changeSeats = function() {
+        for (i = 0; i < allSeats.length; i++) {
+            allSeats[i].classList = seatList[i].value;
+        };
+        return "done";
+    };
+    
+    const changeSeats2 = function() {
+        for (i = 0; i < allSeats.length; i++) {
+            console.log(allSeats[i]);
+            allSeats[i].className = "";
+            let seatClasses = seatList[i].values();
+            //console.log(seatClasses);
+            for (let j of seatClasses) {
+                console.log("hei");
+                console.log(j);
+                //allSeats[i].classList.add(j);
+            };
+        };
+    };
+    */
+    
+    const hideCinemaSegment = function() {
+        if (selectedFilm) {
+            seatsCont.style.opacity = "1";
+        } else {
+            seatsCont.style.opacity = "0";
+        };
+    };
+    hideCinemaSegment();
+    
+    
+    let cinemas = [];
+    const correctCinema = function() {
+        console.log("start");
+        for (i = 0; i < inpsRadio.length; i++) {
+            if (inpsRadio[i] === selectedFilm) {
+                
+            };
+        };
+    };
+    
+    
+    
+    
+    
+    const checkFilled = function() {
+        if (selectedFilm && selectedSeat) {
+            btnOrder.classList.add("btnReady");
+            btnOrder.disabled = false;
+        } else {
+            btnOrder.classList.remove("btnReady");
+            btnOrder.disabled = true;
+        };
+    };
+    
+    
+    
+    inpsRadio.forEach(function(e){e.addEventListener("click", selectRadio)});
+    inpsOrder.forEach(function(e){e.addEventListener("click", printOrder)});
+    btnOrder.addEventListener("click", printReceipt);
+    allSeats.forEach(function(e){e.addEventListener("click", selectSeat)});
+    inpsRadio.forEach(function(e){e.addEventListener("click", checkFilled)});
+    allSeats.forEach(function(e){e.addEventListener("click", checkFilled)});
+    inpsRadio.forEach(function(e){e.addEventListener("click", hideCinemaSegment)});
+</script>
+</body>
+</html>
