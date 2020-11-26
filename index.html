@@ -132,7 +132,7 @@
         for (i of inpsRadio) {
             i.checked = false;
         };
-        if (this.value === selectedFilm) {
+        if (this === selectedFilm) {
             this.checked = false;
             selectedFilm = 0;
         } else {
@@ -237,7 +237,7 @@
     };
     hideCinemaSegment();
     
-    
+    /*
     let cinemas = [];
     const correctCinema = function() {
         console.log("start");
@@ -247,7 +247,7 @@
             };
         };
     };
-    
+    */
     
     
     
