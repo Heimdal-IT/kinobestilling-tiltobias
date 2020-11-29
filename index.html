@@ -128,20 +128,28 @@
     };
     */
     
+    
     const printOrder = function() {
-        let allItems = getChoiceInputs("film").concat(getChoiceInputs("accessories"));
+        let film = getChoiceInputs("film");
+        if (!(film[0])) {
+            film.push({ item : "", price : "0"});
+        };
+        let allItems = film.concat(getChoiceInputs("accessories"));
         let position = getSeatPosition(selectedSeat);
+        rcptCont.innerHTML = "";
         
-        rcptCont.innerHTML = "<li>" + allItems[0].item + " " + allItems[0].price + "kr<ul><li> rad: " + position.row + ", sete: " + position.col + "</li></ul></li>";
-        
+        if (film[0].item) {
+            rcptCont.innerHTML = "<li>" + allItems[0].item + " " + allItems[0].price + "kr<ul><li> rad: " + position.row + ", sete: " + position.col + "</li></ul></li>";
+        };
         let totalPrice = +allItems[0].price * 100;
         
         for (i = 1; i < allItems.length; i++) {
             rcptCont.innerHTML += "<li>" + allItems[i].item + " " + allItems[i].price + "kr </li>";
             totalPrice += +allItems[i].price*100;
         };
-        rcptCont.innerHTML += "<li class=\"totalPrice\">Total: " + totalPrice/100 + "kr</li>";
-        
+        if (allItems.length > 1 || allItems[0].item) {
+            rcptCont.innerHTML += "<li class=\"totalPrice\">Total: " + totalPrice/100 + "kr</li>";
+        };
     };
     
     
@@ -260,7 +268,6 @@
             btnOrder.disabled = true;
         };
     };
-    
     
     
     inpsRadio.forEach(function(e){e.addEventListener("click", selectRadio)});
