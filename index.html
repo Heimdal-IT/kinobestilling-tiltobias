@@ -76,9 +76,9 @@
 
             <!--</form>-->
             <!--<div id="gridLeft">-->
-                <div id="orderContainer">
+                <ul id="orderContainer">
 
-                </div>
+                </ul>
                 <div id="btnContainer">
                     <input type="button" id="btnOrder" value="Bestill" disabled>
                 </div>
@@ -98,12 +98,13 @@
     const rcptCont = document.getElementById("orderContainer");
     const seatCont = document.getElementById("seats");
     const seatsCont = document.getElementById("seatsContainer");
+    const cinema = document.getElementById("cinema");
     
     
     const getChoiceInputs = function(group) {
         let choices = document.querySelectorAll("input[type=\"radio\"][name=" + group + "],input[type=\"checkbox\"][name=" + group + "]");
         let selectedChoices = [];
-        for (const i of choices) {
+        for (let i of choices) {
             if (i.checked) {
                 selectedChoices.push({
                     item : i.value ,
@@ -114,7 +115,7 @@
         return selectedChoices;
     };
     
-    
+    /*
     const printOrder = function() {
         let allItems = getChoiceInputs("film").concat(getChoiceInputs("accessories"));
         rcptCont.innerHTML = "";
@@ -125,6 +126,24 @@
         };
         rcptCont.innerHTML += "Total: " + totalPrice/100 + "kr";
     };
+    */
+    
+    const printOrder = function() {
+        let allItems = getChoiceInputs("film").concat(getChoiceInputs("accessories"));
+        let position = getSeatPosition(selectedSeat);
+        
+        rcptCont.innerHTML = "<li>" + allItems[0].item + " " + allItems[0].price + "kr<ul><li> rad: " + position.row + ", sete: " + position.col + "</li></ul></li>";
+        
+        let totalPrice = +allItems[0].price * 100;
+        
+        for (i = 1; i < allItems.length; i++) {
+            rcptCont.innerHTML += "<li>" + allItems[i].item + " " + allItems[i].price + "kr </li>";
+            totalPrice += +allItems[i].price*100;
+        };
+        rcptCont.innerHTML += "<li class=\"totalPrice\">Total: " + totalPrice/100 + "kr</li>";
+        
+    };
+    
     
     
     let selectedFilm;
@@ -135,10 +154,12 @@
         if (this === selectedFilm) {
             this.checked = false;
             selectedFilm = 0;
+            rcptCont.innerHTML = "";
         } else {
             this.checked = true;
             selectedFilm = this;
         };
+        selectedSeat = "";
     };
     
     
@@ -162,7 +183,7 @@
         };
     };
     makeSeats();
-    const allSeats = document.querySelectorAll(".seat");
+    let allSeats = document.querySelectorAll(".seat");
     
     
     let selectedSeat;
@@ -195,38 +216,6 @@
         return { row: rowPosition , col: colPosition};
     };
     
-    /*
-    let seatList = [];
-    const saveSeats = function() {
-        //let seatList = [];
-        for (i = 0; i < allSeats.length; i++) {
-            seatList.push(allSeats[i].classList);
-        };
-        return seatList;
-    };
-    
-    
-    const changeSeats = function() {
-        for (i = 0; i < allSeats.length; i++) {
-            allSeats[i].classList = seatList[i].value;
-        };
-        return "done";
-    };
-    
-    const changeSeats2 = function() {
-        for (i = 0; i < allSeats.length; i++) {
-            console.log(allSeats[i]);
-            allSeats[i].className = "";
-            let seatClasses = seatList[i].values();
-            //console.log(seatClasses);
-            for (let j of seatClasses) {
-                console.log("hei");
-                console.log(j);
-                //allSeats[i].classList.add(j);
-            };
-        };
-    };
-    */
     
     const hideCinemaSegment = function() {
         if (selectedFilm) {
@@ -237,19 +226,29 @@
     };
     hideCinemaSegment();
     
-    /*
+    
     let cinemas = [];
+    const cinemasSetup = function() {
+        cinemas = [];
+        for (let i = 0; i < 4; i++) {
+            makeSeats();
+            cinemas.push(seatCont.innerHTML);
+        };
+    };
+    cinemasSetup();
+    
+    
     const correctCinema = function() {
-        console.log("start");
         for (i = 0; i < inpsRadio.length; i++) {
             if (inpsRadio[i] === selectedFilm) {
-                
+                seatCont.innerHTML = cinemas[i];
+                allSeats = document.querySelectorAll(".seat");
+                allSeats.forEach(function(e){e.addEventListener("click", selectSeat)});
+                allSeats.forEach(function(e){e.addEventListener("click", checkFilled)});
+                allSeats.forEach(function(e){e.addEventListener("click", printOrder)});
             };
         };
     };
-    */
-    
-    
     
     
     const checkFilled = function() {
@@ -267,10 +266,11 @@
     inpsRadio.forEach(function(e){e.addEventListener("click", selectRadio)});
     inpsOrder.forEach(function(e){e.addEventListener("click", printOrder)});
     btnOrder.addEventListener("click", printReceipt);
-    allSeats.forEach(function(e){e.addEventListener("click", selectSeat)});
+    //allSeats.forEach(function(e){e.addEventListener("click", selectSeat)});
     inpsRadio.forEach(function(e){e.addEventListener("click", checkFilled)});
-    allSeats.forEach(function(e){e.addEventListener("click", checkFilled)});
+    //allSeats.forEach(function(e){e.addEventListener("click", checkFilled)});
     inpsRadio.forEach(function(e){e.addEventListener("click", hideCinemaSegment)});
+    inpsRadio.forEach(function(e){e.addEventListener("click", correctCinema)});
 </script>
 </body>
 </html>

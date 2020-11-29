@@ -34,6 +34,10 @@ main {
 }
 
 
+.totalPrice {
+    margin-top: 50px;
+}
+
 #btnOrder {
     min-width: 150px;
     width: 50%;
