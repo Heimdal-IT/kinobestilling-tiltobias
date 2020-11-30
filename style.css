@@ -27,15 +27,56 @@ h2 {
     margin: 0 0 5px 0;
 }
 
-#films>label, 
-#films>label * {
+.selection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.selection label {
+    cursor: pointer;
+    display: inline-block;
+    width: 120px;
+    margin: 2px;
+    position: relative;
+}
+
+.selection label * {
     cursor: pointer;
 }
+
+.selection label>div {
+    display: block;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+}
+.selection label:nth-of-type(1)>div {
+    background-image: url("BillieEilish.webp");
+}
+.selection label:nth-of-type(2)>div {
+    background-image: url("ChristianBB.png");
+}
+.selection label:nth-of-type(3)>div {
+    background-image: url("notimetodie.jpg");
+}
+.selection label:nth-of-type(4)>div {
+    background-image: url("SannhetenOmR%C3%B8dhette.jpg");
+}
+input[name="film"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 
 #accessories>label, 
 #accessories>label * {
     cursor: pointer;
 }
+
 
 
 ul {
